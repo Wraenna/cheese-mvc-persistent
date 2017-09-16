@@ -2,8 +2,10 @@ package org.launchcode.controllers;
 
 import org.launchcode.models.Category;
 import org.launchcode.models.Cheese;
+import org.launchcode.models.Menu;
 import org.launchcode.models.data.CheeseDao;
 import org.launchcode.models.data.CategoryDao;
+import org.launchcode.models.data.MenuDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Created by LaunchCode
@@ -24,6 +27,9 @@ public class CheeseController {
 
     @Autowired
     private CategoryDao categoryDao;
+
+    @Autowired
+    private MenuDao menuDao;
 
     // Request path: /cheese
     @RequestMapping(value = "")
@@ -49,6 +55,7 @@ public class CheeseController {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Cheese");
+            model.addAttribute("categories", categoryDao.findAll());
             return "cheese/add";
         }
 
@@ -69,11 +76,25 @@ public class CheeseController {
     @RequestMapping(value = "remove", method = RequestMethod.POST)
     public String processRemoveCheeseForm(@RequestParam int[] cheeseIds) {
 
+        // For each ID submitted,
+        // Find the associated cheese
+        // Get all menus with which that cheese is associated
+        // Then for each menu, remove that cheese
+
+        // Once that's done, remove those cheeses
+
+        for (int cheeseId : cheeseIds) {
+            Cheese cheese = cheeseDao.findOne(cheeseId);
+            List<Menu> menus = cheese.getMenus();
+            for (Menu menu : menus) {
+                menu.removeItem(cheese);
+            }
+        }
+
         for (int cheeseId : cheeseIds) {
             cheeseDao.delete(cheeseId);
         }
 
-        // TODO: Solve the mystery of deleting a cheese when it's in a menu.
         return "redirect:/cheese";
     }
 

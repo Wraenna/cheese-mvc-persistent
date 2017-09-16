@@ -33,7 +33,7 @@ public class MenuController {
     @RequestMapping(value="")
     public String index(Model model) {
         model.addAttribute("menus", menuDao.findAll());
-        model.addAttribute("title", "Categories");
+        model.addAttribute("title", "Menus");
         return "menu/index";
     }
 
@@ -47,6 +47,7 @@ public class MenuController {
     @RequestMapping(value="add", method=RequestMethod.POST)
     public String add(Model model, @ModelAttribute @Valid Menu menu, Errors errors) {
         if (errors.hasErrors()) {
+            model.addAttribute("title", "Add Menu");
             return "menu/add";
         } else {
             menuDao.save(menu);
@@ -56,6 +57,10 @@ public class MenuController {
 
     @RequestMapping(value="view/{id}", method=RequestMethod.GET)
     public String viewMenu(Model model, @PathVariable int id) {
+
+        Menu menu = menuDao.findOne(id);
+
+        model.addAttribute("title", menu.getName());
         model.addAttribute("menu", menuDao.findOne(id));
         return "menu/view";
 
@@ -80,9 +85,8 @@ public class MenuController {
                           @ModelAttribute @Valid AddMenuItemForm form,
                           Errors errors) {
 
-        // TODO: Add validation to ensure you don't duplicate cheeses.
-
         if (errors.hasErrors()) {
+            model.addAttribute("form", form);
             return "menu/add-item";
         } else {
 

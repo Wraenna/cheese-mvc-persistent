@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import javax.persistence.EntityManager;
 
 /**
  * Created by LaunchCode
@@ -62,5 +63,9 @@ public class Cheese {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public List<Menu> getMenus() {
+        return menus;
     }
 }

@@ -37,6 +37,7 @@ public class CategoryController {
     public String add(Model model,
                       @ModelAttribute @Valid Category category, Errors errors) {
         if (errors.hasErrors()) {
+            model.addAttribute("title", "Add Category");
             return "category/add";
         } else {
             categoryDao.save(category);

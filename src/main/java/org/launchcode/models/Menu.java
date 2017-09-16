@@ -26,6 +26,10 @@ public class Menu {
         cheeses.add(item);
     }
 
+    public void removeItem(Cheese item) {
+        cheeses.remove(item);
+    }
+
     public int getId() {
         return id;
     }
